@@ -38,3 +38,10 @@ if 'href="#harvest"' not in index:
  index=index.replace("addEventListener('hashchange',showTab);showTab();","addEventListener('hashchange',showTab);showTab();\naddEventListener('message',event=>{const f=document.getElementById('loss-frame');if(event.source===f.contentWindow&&event.data?.type==='loss-height'&&Number.isFinite(event.data.height))f.style.height=Math.max(800,Math.min(100000,event.data.height+40))+'px'});")
  (ROOT/'dev/index.html').write_text(index)
 print('Child bytes',len(html),'source public pairs',len(pairs),'CBOE top',pairs.get('CBOE'))
+
+indexpath=ROOT/'dev/index.html'
+index=indexpath.read_text()
+bridge=(ROOT/'storage-bridge.js').read_text()
+if '/* Device-only portfolio storage bridge.' not in index:
+ index=index.replace('</body>','<script>'+bridge+'</script></body>')
+ indexpath.write_text(index)
